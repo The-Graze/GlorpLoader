@@ -10,8 +10,7 @@ namespace GlorpLoader
 
         public static void LoadMods(Type[] typeMods)
         {
-            Console.WriteLine("Registering mods");
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = Paths.LoadAssembliesFromFolder("C:/ExamplePath/Plugins");
             foreach (var assembly in assemblies.Where(assembly => assembly != null && assembly.GetCustomAttribute<GlorpMod>() != null))
             {
                 try
@@ -22,7 +21,6 @@ namespace GlorpLoader
                         for (int i = 0; i < modTypes.Length; i++)
                         {
                             var modInstance = Activator.CreateInstance(modTypes[i]) as GlorpMod ?? throw new Exception("Failed to cast page type.");
-                            Console.WriteLine($"Found mod {modInstance.Name}");
                             mods.Add(modInstance);
                         }
                     }
@@ -30,9 +28,12 @@ namespace GlorpLoader
                 catch (System.Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Failed to check {assembly.Location} {ex}");
+                    Console.WriteLine($"Failed to check {assembly.Location}: {ex} (Returning!)");
                     Console.ForegroundColor = ConsoleColor.White;
+                    return;
                 }
+                Console.WriteLine($"Loading {mods.Count} mods!");
+                /* Make it so it registers every mod somehow by putting into a "GlorpLoader" gameobject thats in DDOL*/
             }
         }
     }

@@ -9,6 +9,29 @@ namespace GlorpLoader
     {
         private static List<GlorpMod> mods = new List<GlorpMod>();
 
+        static void WriteLine(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
+        static void WriteLine(string msg, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        static void Write(string msg)
+        {
+            Console.Write(msg);
+        }
+
+        static void Write(string msg, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
         public static void LoadMods(Type[] typeMods)
         {
             var assemblies = Paths.LoadAssembliesFromFolder("C:/ExamplePath/Plugins");
@@ -42,6 +65,9 @@ namespace GlorpLoader
                         GUID = mod.GUID,
                         Version = mod.Version,
                     });
+                    Write("[GlorpLoader] Loading ");
+                    Write($"[{mod.Name}] ", ConsoleColor.Cyan);
+                    Write($"{mod.Version}\n", ConsoleColor.Gray);
                     Type[] glorpModTypes = mods.Select(glorp => glorp.GetType()).ToArray();
                     GameObject.DontDestroyOnLoad(new GameObject("GlorpLoader",glorpModTypes));
                 }
